@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Disponibilidad sala</title>
+
+  <!-- FullCalendar -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.css" rel="stylesheet" />
+</head>
+<body style="font-family:sans-serif;margin:0;padding:1rem">
+
+  <!-- Info de la sala -->
+  <img id="foto" style="float:right;max-height:150px;margin-left:1rem" />
+  <h2 id="nombre">Sala</h2>
+  <p id="info">Información general...</p>
+
+  <!-- Calendario -->
+  <div id="cal"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js"></script>
+  <script>
+  (async ()=>{
+    /* ---------- 1. Leer metadatos de la lista ---------- */
+    const lista = "SalasDeJuntas";
+    const sala  = "Aprendedor al centro";       /* <- ajusta aquí */
+
+    const api = `${_spPageContextInfo.webAbsoluteUrl}/_api/web/lists/GetByTitle('${lista}')/Items?$filter=Title eq '${encodeURIComponent(sala)}'`;
+    const item = await fetch(api,{headers:{Accept:'application/json;odata=nometadata'}})
+                        .then(r=>r.json()).then(d=>d.value[0]);
+
+    document.getElementById('foto').src  = item.FotoUrl.Url || item.FotoUrl;
+    document.getElementById('nombre').textContent = item.Title;
+    document.getElementById('info').innerHTML =
+          `${item.Campus} · ${item.Ubicacion}<br>${item.Capacidad} personas · ${item.Equipamiento}`;
+
+    /* ---------- 2. Configurar FullCalendar ---------- */
+    const FEED = (item.ICSUrl.Url || item.ICSUrl).replace('://','://corsproxy.io/?'); // CORS
+
+    const calEl = document.getElementById('cal');
+    const cal = new FullCalendar.Calendar(calEl,{
+      plugins: [ FullCalendar.icalendarPlugin, FullCalendar.timeGridPlugin ],
+      locale: 'es-mx',
+      initialView: 'timeGridDay',
+      nowIndicator: true,
+      height: '88vh',
+      headerToolbar:{
+        left:   'prev,next today',
+        center: 'title',
+        right:  'timeGridDay,timeGridWeek,listDay'
+      },
+      buttonText:{ today:'Hoy', day:'Día', week:'Semana', list:'Lista' },
+      events:{ url: FEED, format:'ics' },
+      eventColor:'#0078d4',
+      slotMinTime:'07:00', slotMaxTime:'22:00'
+    });
+    cal.render();
+
+    /* ---------- 3. Auto-refresh ---------- */
+    setInterval(()=>cal.refetchEvents(), 5*60*1000);  // cada 5 min
+
+    const millisToMidnight = new Date().setHours(24,5,0,0) - Date.now();
+    setTimeout(function jumpToToday(){
+        cal.today(); cal.refetchEvents();
+        setTimeout(jumpToToday, 24*60*60*1000);
+    }, millisToMidnight);
+
+  })();
+  </script>
+</body>
+</html>
