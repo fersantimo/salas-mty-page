@@ -1,77 +1,63 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <title>Disponibilidad – Sala “Aprendedor al centro”</title>
+  <meta charset="utf-8" />
+  <title>Sala – Aprendedor al centro</title>
 
-  <!-- FullCalendar + ical plug-in -->
-  <link  rel="stylesheet"
-         href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css">
+  <!-- ---------------------  FullCalendar  --------------------- -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css">
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.10/index.global.min.js"></script>
 
   <style>
-    html,body{margin:0;height:100%;font-family:Segoe UI,Arial,sans-serif}
-    img#foto{float:right;max-height:160px;margin:1rem;border-radius:6px;box-shadow:0 2px 6px #0003}
-    h2 {margin:1rem 0 .5rem;font-weight:600;font-size:1.8rem}
-    #info{margin:0 1rem 1rem;color:#444;line-height:1.4}
-    #cal{margin:0 1rem 1rem}
+    body{font-family:sans-serif;margin:0;padding:1rem;}
+    img#foto{float:right;max-width:220px;height:auto;margin-left:1rem;border-radius:6px}
+    #cal{margin-top:1rem}
   </style>
 </head>
+
 <body>
-
-  <!-- 1. Datos fijos de la sala -->
-  <img id="foto"
-       src="https://raw.githubusercontent.com/fersantimo/salas-mty-page/refs/heads/main/salasMTY-Vertical.png"
-       alt="Foto sala">
-
+  <!-- 1. Datos fijos de la sala -------------------------------------------- -->
+  <img id="foto" src="salasMTY-Vertical.png" alt="Foto sala">
   <h2 id="nombre">Sala – Aprendedor al centro</h2>
-  <p id="info">
-     Campus MTY · Centrales Norte piso 2<br>
-     16 personas · Proyector, cámara, audio
-  </p>
+  <p  id="info">Campus MTY · Centrales Norte piso 2<br>16 personas · Proyector, cámara, audio</p>
 
-  <!-- 2. Calendario -->
-  <div id="cal"></div>
+  <!-- 2. Calendario --------------------------------------------------------- -->
+  <div id="cal">Cargando agenda…</div>
 
-  <!-- 3. Lógica -->
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async ()=>{
 
-    /* --------- Config Calendar --------- */
+    /* -------- 1. URL público del ICS + proxy CORS -------- */
+    const RAW_ICS = "https://outlook.office365.com/owa/calendar/171f51fb1da64999af83fed6a931c693@tecmx.onmicrosoft.com/821c413038c64167a4dd104d2e55398e10998648141616686602/calendar.ics";
+    const FEED    = "https://api.allorigins.win/raw?url=" + encodeURIComponent(RAW_ICS);
+
+    /* -------- 2. Instancia de FullCalendar -------- */
     const cal = new FullCalendar.Calendar(document.getElementById('cal'), {
-      plugins: [ FullCalendar.icalendarPlugin, FullCalendar.timeGridPlugin, FullCalendar.listPlugin ],
-      locale: 'es-mx',
+      plugins: [ FullCalendar.icalendarPlugin, FullCalendar.timeGridPlugin ],
+      locale:  'es-mx',
       initialView: 'timeGridDay',
-      height: '83vh',          // cabe bajo la cabecera
       nowIndicator: true,
+      height: '85vh',
+
       headerToolbar:{
-        left  : 'prev,next today',
+        left:   'prev,next today',
         center: 'title',
-        right : 'timeGridDay,timeGridWeek,listWeek'
+        right:  'timeGridDay,timeGridWeek,listDay'
       },
-      buttonText:{
-        today:'Hoy', day:'Día', week:'Semana', list:'Lista'
-      },
-      slotMinTime:'07:00',
-      slotMaxTime:'22:00',
-      eventColor :'#0078d4',
-      events:{
-        url:'https://outlook.office365.com/owa/calendar/171f51fb1da64999af83fed6a931c693@tecmx.onmicrosoft.com/821c413038c64167a4dd104d2e55398e10998648141616686602/calendar.ics',
-        format:'ics'
-      }
+      buttonText:{ today:'Hoy', day:'Día', week:'Semana', list:'Lista' },
+      events:{ url: FEED, format:'ics' },
+      eventColor:'#0078d4',
+      slotMinTime:'07:00', slotMaxTime:'22:00'
     });
     cal.render();
 
-    /* --------- Auto-refresh cada 5 min --------- */
-    setInterval(()=>cal.refetchEvents(),5*60*1000);
-
-    /* --------- Volver a HOY a medianoche +5 min --------- */
-    const msToMid = new Date().setHours(24,5,0,0)-Date.now();
-    setTimeout(function goToday(){
-        cal.today(); cal.refetchEvents();
-        setTimeout(goToday,24*60*60*1000);
-    }, msToMid);
+    /* -------- 3. Auto-refresh -------- */
+    setInterval(()=>cal.refetchEvents(), 5*60*1000);           // cada 5 min
+    const msToMidnight = new Date().setHours(24,5,0,0) - Date.now();
+    setTimeout(function jump(){ cal.today(); cal.refetchEvents();
+                                setTimeout(jump, 86400000); }, msToMidnight);
   });
   </script>
 </body>
