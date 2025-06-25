@@ -28,31 +28,36 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const ICS_RAW_URL = "https://api.allorigins.win/raw?url=https%3A%2F%2Foutlook.office365.com%2Fowa%2Fcalendar%2F171f51fb1da64999af83fed6a931c693%40tecmx.onmicrosoft.com%2F4ff84c083ffd48fda5ad8e53d8e6d89414485631548000335326%2Fcalendar.ics
-";
-      const FEED_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(ICS_RAW_URL);
+document.addEventListener('DOMContentLoaded', async () => {
 
-      const calendar = new FullCalendar.Calendar(document.getElementById('cal'), {
-        plugins: [ FullCalendar.icalendarPlugin, FullCalendar.timeGridPlugin ],
-        locale: 'es-mx',
-        initialView: 'timeGridDay',
-        nowIndicator: true,
-        height: 'auto',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'timeGridDay,timeGridWeek,listDay'
-        },
-        buttonText: { today: 'Hoy', day: 'Día', week: 'Semana', list: 'Lista' },
-        events: { url: FEED_URL, format: 'ics' },
-        eventColor: '#0078d4',
-        slotMinTime: '07:00',
-        slotMaxTime: '22:00'
-      });
+  /* URL del .ics, pasada por el proxy */
+  const ICS_RAW_URL = `https://api.allorigins.win/raw?url=https%3A%2F%2Foutlook.office365.com%2Fowa%2Fcalendar%2F171f51fb1da64999af83fed6a931c693%40tecmx.onmicrosoft.com%2F4ff84c083ffd48fda5ad8e53d8e6d89414485631548000335326%2Fcalendar.ics`;
 
-      calendar.render();
-    });
-  </script>
+  const calendar = new FullCalendar.Calendar(
+    document.getElementById('cal'),
+    {
+      plugins: [FullCalendar.icalendarPlugin, FullCalendar.timeGridPlugin],
+      locale: 'es-mx',
+      initialView: 'timeGridDay',
+      nowIndicator: true,
+      height: 'auto',
+      headerToolbar:{
+        left:'prev,next today',
+        center:'title',
+        right:'timeGridDay,timeGridWeek,listDay'
+      },
+      buttonText:{ today:'Hoy', day:'Día', week:'Semana', list:'Lista' },
+      events:{ url: ICS_RAW_URL, format:'ics', method:'GET' },
+      icalendarPluginSettings:{ ignoreTrailingWhitespace:true },
+      eventColor:'#0078d4',
+      slotMinTime:'07:00',
+      slotMaxTime:'22:00'
+    }
+  );
+
+  calendar.render();
+});
+</script>
+
 </body>
 </html>
