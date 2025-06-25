@@ -29,7 +29,8 @@
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      const ICS_RAW_URL = "https://outlook.office365.com/owa/calendar/171f51fb1da64999af83fed6a931c693@tecmx.onmicrosoft.com/821c413038c64167a4dd104d2e55398e10998648141616686602/calendar.ics";
+      const ICS_RAW_URL = "https://api.allorigins.win/raw?url=https%3A%2F%2Foutlook.office365.com%2Fowa%2Fcalendar%2F171f51fb1da64999af83fed6a931c693%40tecmx.onmicrosoft.com%2F4ff84c083ffd48fda5ad8e53d8e6d89414485631548000335326%2Fcalendar.ics
+";
       const FEED_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(ICS_RAW_URL);
 
       const calendar = new FullCalendar.Calendar(document.getElementById('cal'), {
