@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <title>Sala – Aprendedor al centro</title>
 
-  <!-- SÓLO el .js, ya trae CSS embebido -->
+  <!-- FullCalendar core + plugins (en orden correcto) -->
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.11/index.global.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.11/index.global.min.js"></script>
+
 
   <style>
     body { font-family: sans-serif; margin: 0; padding: 1rem; display: flex; gap: 2rem; align-items: flex-start; }
@@ -34,9 +34,6 @@
                  16 personas · Proyector, cámara, audio</p>
     <div id="cal">Cargando agenda…</div>
   </div>
-
-  <!-- Librería -->
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
   <script>
   document.addEventListener('DOMContentLoaded', async () => {
