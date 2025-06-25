@@ -1,60 +1,69 @@
-<!DOCTYPE html><html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Agenda – Sala Aprendedor al centro</title>
+  <title>Sala – Aprendedor al centro</title>
 
-  <!-- 1️⃣ Núcleo de FullCalendar (trae CSS embebido) -->
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/index.global.min.js"></script>
+  <!-- 1) Core de FullCalendar (trae CSS embebido) -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
-  <!-- 2️⃣ ical.js ***ANTES*** del plugin icalendar -->
+  <!-- 2) ICAL.js, requisito del plugin iCalendar -->
   <script src="https://cdn.jsdelivr.net/npm/ical.js@1.4.0/build/ical.min.js"></script>
 
-  <!-- 3️⃣ Plugins   (el de icalendar primero) -->
+  <!-- 3) Plugin iCalendar de FC -->
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.11/index.global.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.11/index.global.min.js"></script>
 
   <style>
-    body{margin:0;font-family:sans-serif;display:flex;height:100vh}
-    #foto{width:36%;max-width:480px;object-fit:cover}
+    body{margin:0;padding:1rem;display:flex;gap:2rem;align-items:flex-start;font-family:sans-serif}
+    #foto{width:45%;max-width:440px;border-radius:8px}
     #cal{flex:1;min-width:320px}
-    @media(max-width:900px){body{flex-direction:column}#foto{width:100%;height:38vh}}
+    @media(max-width:900px){body{flex-direction:column}#foto{width:100%}}
   </style>
 </head>
 <body>
+  <!-- Foto fija -->
+  <img id="foto" src="https://raw.githubusercontent.com/fersantimo/salas-mty-page/main/salasMTY-Vertical.png" alt="Foto sala">
 
-  <img id="foto"
-       src="https://raw.githubusercontent.com/fersantimo/salas-mty-page/main/salasMTY-Vertical.png"
-       alt="banner sala">
-
-  <div id="cal">Cargando agenda…</div>
+  <!-- Texto + calendario -->
+  <div>
+    <h2>Sala – Aprendedor al centro</h2>
+    <p>Campus MTY · Centrales Norte piso 2<br>16 personas · Proyector, cámara, audio</p>
+    <div id="cal">Cargando agenda…</div>
+  </div>
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
 
-    /* URL pública iCal de Google */
-    const ICS_GOOGLE = "https://calendar.google.com/calendar/ical/2318gaej1kq4i7ljh5jjb3jpe35i7fi3%40import.calendar.google.com/public/basic.ics";
-    /* Proxy sin CORS */
-    const FEED = "https://api.allorigins.win/raw?url=" + encodeURIComponent(ICS_GOOGLE);
+    /* URL pública .ics (Google Calendar en tu ejemplo) */
+    const ICS_URL   = 'https://calendar.google.com/calendar/ical/2318gaej1kq4i7ljh5jjb3jpe35i7fi3%40import.calendar.google.com/public/basic.ics';
 
-    const cal = new FullCalendar.Calendar(document.getElementById('cal'),{
-      plugins: [FullCalendarICalendar, FullCalendarTimeGrid],
-      locale : 'es',
+    /* Proxy rapidísimo para saltar CORS */
+    const FEED_URL  = 'https://corsproxy.io/?' + encodeURIComponent(ICS_URL);
+
+    /* Instanciamos FullCalendar */
+    const calendar = new FullCalendar.Calendar(document.getElementById('cal'), {
+      plugins: [ FullCalendar.timeGridPlugin, FullCalendar.icalendarPlugin ],
+      locale: 'es-mx',
       initialView: 'timeGridDay',
       nowIndicator: true,
-      height:'auto',
-      headerToolbar:{
-        left:'prev,next today',
-        center:'title',
-        right:'timeGridDay,timeGridWeek,listDay'
+      height: 'auto',
+      headerToolbar: {
+        left  : 'prev,next today',
+        center: 'title',
+        right : 'timeGridDay,timeGridWeek,listDay'
       },
-      buttonText:{today:'Hoy',day:'Día',week:'Semana',list:'Lista'},
-      events:{ url: FEED, format:'ics' },
-      eventColor:'#0078d4',
-      slotMinTime:'07:00', slotMaxTime:'22:00'
+      buttonText: { today: 'Hoy', day: 'Día', week: 'Semana', list: 'Lista' },
+      events: { url: FEED_URL, format: 'ics' },
+      eventColor: '#0078d4',
+      slotMinTime: '07:00',
+      slotMaxTime: '22:00'
     });
 
-    cal.render();
-    setInterval(()=>cal.refetchEvents(),5*60*1000);   // refresco cada 5 min
+    calendar.render();
+
+    /* Refrescar cada 5 min */
+    setInterval(() => calendar.refetchEvents(), 5 * 60 * 1000);
   });
   </script>
-</body></html>
+</body>
+</html>
