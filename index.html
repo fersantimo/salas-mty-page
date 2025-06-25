@@ -1,20 +1,24 @@
-<!DOCTYPE html><html lang="es"><head>
-<meta charset="utf-8" />
-<title>Sala – Aprendedor al centro</title>
+<head>
+  <meta charset="utf-8" />
+  <title>Sala – Aprendedor al centro</title>
 
-<!-- core + vistas -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-<!-- plugin ics -->
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.11/index.global.min.js"></script>
+  <!-- core + vistas -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
-<!-- estilo rápido -->
-<style>
-  body{margin:0;padding:1rem;display:flex;gap:2rem;align-items:flex-start;font-family:sans-serif}
-  #foto{width:45%;max-width:480px;border-radius:8px}
-  #cal{flex:1;min-width:320px}
-  @media(max-width:900px){body{flex-direction:column}#foto{width:100%}}
-</style>
-</head><body>
+  <!-- 🔧 necesario para .ics -->
+  <script src="https://cdn.jsdelivr.net/npm/ical.js@1.4.0/build/ical.min.js"></script>
+
+  <!-- plugin para leer .ics -->
+  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.11/index.global.min.js"></script>
+
+  <style>
+    body { margin:0; padding:1rem; display:flex; gap:2rem; align-items:flex-start; font-family:sans-serif }
+    #foto { width:45%; max-width:480px; border-radius:8px }
+    #cal { flex:1; min-width:320px }
+    @media(max-width:900px){ body{flex-direction:column} #foto{width:100%} }
+  </style>
+</head>
+<body>
 
 <img id="foto" src="https://raw.githubusercontent.com/fersantimo/salas-mty-page/main/salasMTY-Vertical.png" alt="Foto sala">
 
