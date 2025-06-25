@@ -1,86 +1,57 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <title>Sala – Aprendedor al centro</title>
+<!DOCTYPE html><html lang="es"><head>
+<meta charset="utf-8">
+<title>Agenda – Sala Aprendedor al centro</title>
 
-  <!-- 1️⃣  FullCalendar core en modo *global*  -->
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/index.global.min.js"></script>
+<!-- 1️⃣  FullCalendar core + estilo embebido -->
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/index.global.min.js"></script>
 
-  <!-- 2️⃣  Vista TimeGrid -->
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.11/index.global.min.js"></script>
+<!-- 2️⃣  Plugins que vamos a usar (¡después del core!) -->
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.11/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.11/index.global.min.js"></script>
 
-  <!-- 3️⃣  ICAL.js (motor que parsea .ics) -->
-  <script src="https://cdn.jsdelivr.net/npm/ical.js@1.4.0/build/ical.min.js"></script>
+<!-- 3️⃣  ICAL.js: requerido por el plugin icalendar -->
+<script src="https://cdn.jsdelivr.net/npm/ical.js@1.4.0/build/ical.min.js"></script>
 
-  <!-- 4️⃣  Plugin iCalendar -->
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.11/index.global.min.js"></script>
+<style>
+  body{margin:0;display:flex;height:100vh;font-family:sans-serif}
+  #foto{width:35%;max-width:480px;object-fit:cover}
+  #cal{flex:1;min-width:320px}
+  @media(max-width:900px){body{flex-direction:column}#foto{width:100%;height:38vh}}
+</style></head><body>
 
-  <style>
-    :root { color-scheme: light dark; }
-    body{margin:0;padding:1rem;display:flex;gap:2rem;align-items:flex-start;
-         font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-    #foto{width:45%;max-width:480px;border-radius:8px;object-fit:cover}
-    #cal{flex:1;min-width:320px}
-    #info{margin:.5rem 0 1rem;font-size:.95rem;line-height:1.3}
-    @media(max-width:900px){
-      body{flex-direction:column}
-      #foto{width:100%}
-    }
-  </style>
-</head>
+<img id="foto"
+     src="https://raw.githubusercontent.com/fersantimo/salas-mty-page/main/salasMTY-Vertical.png"
+     alt="Foto sala">
 
-<body>
-  <!-- Imagen y texto fijos -->
-  <img id="foto"
-       src="https://raw.githubusercontent.com/fersantimo/salas-mty-page/main/salasMTY-Vertical.png"
-       alt="Foto sala">
+<div id="cal">Cargando…</div>
 
-  <div>
-    <h2>Sala – Aprendedor al centro</h2>
-    <p id="info">
-      Campus MTY · Centrales Norte piso 2<br>
-      16 personas · Proyector, cámara, audio
-    </p>
-    <div id="cal">Cargando agenda…</div>
-  </div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
+  /* ——— URL pública .ics que copiaste de Google ——— */
+  const ICS_PUBLIC = "https://calendar.google.com/calendar/ical/2318gaej1kq4i7ljh5jjb3jpe35i7fi3%40import.calendar.google.com/public/basic.ics";
+  const FEED      = "https://api.allorigins.win/raw?url=" + encodeURIComponent(ICS_PUBLIC);
 
-      /* ----------------  CONFIG  ---------------- */
-      /* URL del .ics tal cual la bajas en el navegador */
-      const ICS_URL =
-        "https://outlook.office365.com/owa/calendar/171f51fb1da64999af83fed6a931c693@tecmx.onmicrosoft.com/4ff84c083ffd48fda5ad8e53d8e6d89414485631548000335326/calendar.ics";
+  const calendar = new FullCalendar.Calendar(document.getElementById('cal'),{
+    plugins: [ FullCalendarTimeGrid, FullCalendarICalendar ],
+    locale : 'es',
+    initialView: 'timeGridDay',
+    nowIndicator: true,
+    headerToolbar:{
+      left:'prev,next today',
+      center:'title',
+      right:'timeGridDay,timeGridWeek,listDay'
+    },
+    buttonText:{ today:'Hoy', day:'Día', week:'Semana', list:'Lista' },
+    height:'auto',
+    events:{ url: FEED, format:'ics' },   // <- aquí consume el .ics
+    eventColor:'#0078d4',
+    slotMinTime:'07:00', slotMaxTime:'22:00'
+  });
 
-      /* La pasamos por allorigins para saltarnos CORS */
-      const FEED_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(ICS_URL);
-      /* ------------------------------------------ */
-
-      const cal = new FullCalendar.Calendar(document.getElementById('cal'), {
-        plugins: [ FullCalendarTimeGrid, FullCalendarIcalendar ],
-        locale: 'es-mx',
-        initialView: 'timeGridDay',          // ✅ cámbialo a 'listDay' si prefieres lista
-        nowIndicator: true,
-        height: 'auto',
-        headerToolbar: {
-          left:   'prev,next today',
-          center: 'title',
-          right:  'timeGridDay,timeGridWeek,listDay'
-        },
-        buttonText: { today:'Hoy', day:'Día', week:'Semana', list:'Lista' },
-
-        events: { url: FEED_URL, format: 'ics' },
-        eventColor: '#0078d4',
-        slotMinTime: '07:00',
-        slotMaxTime: '22:00'
-      });
-
-      cal.render();
-
-      /* Auto-refresh cada 5 min */
-      setInterval(() => cal.refetchEvents(), 5 * 60 * 1000);
-    });
-  </script>
-</body>
-</html>
+  calendar.render();
+  /* refresca cada 5 min */
+  setInterval(()=>calendar.refetchEvents(),5*60*1000);
+});
+</script>
+</body></html>
