@@ -1,69 +1,38 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
   <title>Sala – Aprendedor al centro</title>
-
-  <!-- 1) Core de FullCalendar (trae CSS embebido) -->
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-
-  <!-- 2) ICAL.js, requisito del plugin iCalendar -->
-  <script src="https://cdn.jsdelivr.net/npm/ical.js@1.4.0/build/ical.min.js"></script>
-
-  <!-- 3) Plugin iCalendar de FC -->
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.11/index.global.min.js"></script>
-
   <style>
-    body{margin:0;padding:1rem;display:flex;gap:2rem;align-items:flex-start;font-family:sans-serif}
-    #foto{width:45%;max-width:440px;border-radius:8px}
-    #cal{flex:1;min-width:320px}
-    @media(max-width:900px){body{flex-direction:column}#foto{width:100%}}
+    :root { --azulTec:#0078d4 }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:sans-serif;display:flex;flex-wrap:wrap}
+    #foto{width:40%;min-width:260px;max-width:450px}
+    #info{padding:1rem}
+    h2{margin:0 0 .5rem}
+    iframe{flex:1 1 500px;border:0;height:80vh;min-width:500px}
+    @media(max-width:900px){#foto{width:100%;max-width:none}}
   </style>
 </head>
 <body>
-  <!-- Foto fija -->
-  <img id="foto" src="https://raw.githubusercontent.com/fersantimo/salas-mty-page/main/salasMTY-Vertical.png" alt="Foto sala">
 
-  <!-- Texto + calendario -->
-  <div>
-    <h2>Sala – Aprendedor al centro</h2>
-    <p>Campus MTY · Centrales Norte piso 2<br>16 personas · Proyector, cámara, audio</p>
-    <div id="cal">Cargando agenda…</div>
+  <!-- Tarjeta / póster -->
+  <img id="foto"
+       src="https://raw.githubusercontent.com/fersantimo/salas-mty-page/main/salasMTY-Vertical.png"
+       alt="Sala de juntas">
+
+  <!-- Detalles rápidos -->
+  <div id="info">
+      <h2>Sala – Aprendedor al centro</h2>
+      Campus MTY · Centrales Norte piso 2<br>
+      16 personas · Proyector, cámara, audio
   </div>
 
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  <!-- Visor público de Google Calendar -->
+  <iframe
+     src="https://calendar.google.com/calendar/embed?src=2318gaej1kq4i7ljh5jjb3jpe35i7fi3%40import.calendar.google.com&ctz=America/Mexico_City"
+     loading="lazy">
+  </iframe>
 
-    /* URL pública .ics (Google Calendar en tu ejemplo) */
-    const ICS_URL   = 'https://calendar.google.com/calendar/ical/2318gaej1kq4i7ljh5jjb3jpe35i7fi3%40import.calendar.google.com/public/basic.ics';
-
-    /* Proxy rapidísimo para saltar CORS */
-    const FEED_URL  = 'https://corsproxy.io/?' + encodeURIComponent(ICS_URL);
-
-    /* Instanciamos FullCalendar */
-    const calendar = new FullCalendar.Calendar(document.getElementById('cal'), {
-      plugins: [ FullCalendar.timeGridPlugin, FullCalendar.icalendarPlugin ],
-      locale: 'es-mx',
-      initialView: 'timeGridDay',
-      nowIndicator: true,
-      height: 'auto',
-      headerToolbar: {
-        left  : 'prev,next today',
-        center: 'title',
-        right : 'timeGridDay,timeGridWeek,listDay'
-      },
-      buttonText: { today: 'Hoy', day: 'Día', week: 'Semana', list: 'Lista' },
-      events: { url: FEED_URL, format: 'ics' },
-      eventColor: '#0078d4',
-      slotMinTime: '07:00',
-      slotMaxTime: '22:00'
-    });
-
-    calendar.render();
-
-    /* Refrescar cada 5 min */
-    setInterval(() => calendar.refetchEvents(), 5 * 60 * 1000);
-  });
-  </script>
 </body>
 </html>
