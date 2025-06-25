@@ -4,74 +4,97 @@
   <meta charset="utf-8" />
   <title>Sala – Aprendedor al centro</title>
 
-  <!-- ①  CORE (¡imprescindible!) -->
+  <!-- ─── FullCalendar core ──────────────────────────────────────────────── -->
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/index.global.min.js"></script>
 
-  <!-- ②  ICAL.js (hace el parse del .ics) -->
-  <script src="https://cdn.jsdelivr.net/npm/ical.js@1.4.0/build/ical.min.js"></script>
-
-  <!-- ③  PLUG-INS que sí necesitas -->
+  <!-- ─── Plugins ────────────────────────────────────────────────────────── -->
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.11/index.global.min.js"></script>
+  <!-- ICAL.js (parsea .ics) -->
+  <script src="https://cdn.jsdelivr.net/npm/ical.js@1.4.0/build/ical.min.js"></script>
+  <!-- Plugin para feeds iCalendar -->
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.11/index.global.min.js"></script>
 
+  <!-- ─── Estilos propios ────────────────────────────────────────────────── -->
   <style>
-    body{margin:0;padding:1rem;display:flex;gap:2rem;align-items:flex-start;font-family:sans-serif}
-    #foto{width:45%;max-width:500px;border-radius:8px}
-    #cal{flex:1;min-width:320px}
-    @media(max-width:900px){body{flex-direction:column}#foto{width:100%}}
+    :root { --azul-tec:#0078d4; }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      padding:1.5rem;
+      font-family:sans-serif;
+      display:flex;
+      gap:2rem;
+      align-items:flex-start;
+    }
+    #foto{
+      width:45%;
+      max-width:480px;
+      border-radius:8px;
+    }
+    #cal{
+      flex:1;
+      min-width:320px;
+    }
+    @media(max-width:900px){
+      body{flex-direction:column}
+      #foto{width:100%}
+    }
   </style>
 </head>
 <body>
 
+  <!-- ─── Imagen y datos fijos de la sala ────────────────────────────────── -->
   <img id="foto"
        src="https://raw.githubusercontent.com/fersantimo/salas-mty-page/main/salasMTY-Vertical.png"
-       alt="Foto sala" />
+       alt="Foto sala">
 
   <div>
     <h2>Sala – Aprendedor al centro</h2>
-    <p>Campus MTY · Centrales Norte piso 2<br>16 personas · Proyector, cámara, audio</p>
+    <p>Campus MTY · Centrales Norte piso 2<br>
+       16 personas · Proyector, cámara, audio</p>
+
     <div id="cal">Cargando agenda…</div>
   </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
+  <!-- ─── Script de inicialización ───────────────────────────────────────── -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
 
-  /* URL original del .ics */
-  const ICS_URL   = 'https://outlook.office365.com/owa/calendar/171f51fb1da64999af83fed6a931c693@tecmx.onmicrosoft.com/4ff84c083ffd48fda5ad8e53d8e6d89414485631548000335326/calendar.ics';
+    /* URL original del .ics */
+    const ICS_URL  = 'https://outlook.office365.com/owa/calendar/171f51fb1da64999af83fed6a931c693@tecmx.onmicrosoft.com/4ff84c083ffd48fda5ad8e53d8e6d89414485631548000335326/calendar.ics';
 
-  /* Proxy sin CORS (AllOrigins) */
-  const FEED_URL  = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(ICS_URL);
+    /* La pasamos por el proxy AllOrigins para saltar CORS */
+    const FEED_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(ICS_URL);
 
-  const cal = new FullCalendar.Calendar(document.getElementById('cal'), {
-    plugins: [ FullCalendarTimeGrid, FullCalendarIcalendar ],
-    locale:  'es-mx',
-    initialView: 'timeGridDay',
-    nowIndicator: true,
-    height: 'auto',
+    /* Iniciamos FullCalendar */
+    const calendar = new FullCalendar.Calendar(
+      document.getElementById('cal'),
+      {
+        plugins: [ FullCalendarTimeGrid, FullCalendarIcalendar ],
+        locale: 'es-mx',
+        initialView: 'timeGridDay',
+        nowIndicator: true,
+        height: 'auto',
 
-    headerToolbar:{
-      left:   'prev,next today',
-      center: 'title',
-      right:  'timeGridDay,timeGridWeek,listDay'
-    },
-    buttonText:{ today:'Hoy', day:'Día', week:'Semana', list:'Lista' },
+        headerToolbar:{
+          left  : 'prev,next today',
+          center: 'title',
+          right : 'timeGridDay,timeGridWeek,listDay'   // Día | Semana | Lista
+        },
+        buttonText:{ today:'Hoy', day:'Día', week:'Semana', list:'Lista' },
 
-    events:{ url: FEED_URL, format:'ics' },
-    eventColor:'#0078d4',
-    slotMinTime:'07:00',
-    slotMaxTime:'22:00'
+        events     : { url: FEED_URL, format:'ics' },
+        eventColor : 'var(--azul-tec)',
+        slotMinTime: '07:00',
+        slotMaxTime: '22:00'
+      });
+
+    calendar.render();
+
+    /* Refresca cada 5 min */
+    setInterval(() => calendar.refetchEvents(), 5 * 60 * 1000);
   });
-
-  cal.render();
-
-  /* refresco → cada 5 min   |  salto a “Hoy” cada madrugada */
-  setInterval(()=>cal.refetchEvents(), 5*60*1000);
-  setTimeout(function jump(){
-      cal.today(); cal.refetchEvents();
-      setTimeout(jump, 24*60*60*1000);
-  }, new Date().setHours(24,5,0,0) - Date.now());
-});
-</script>
-
+  </script>
 </body>
 </html>
