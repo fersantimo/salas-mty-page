@@ -1,58 +1,46 @@
-<!DOCTYPE html><html lang="es">
-<head>
+<!DOCTYPE html><html lang="es"><head>
 <meta charset="utf-8" />
 <title>Sala – Aprendedor al centro</title>
 
-<!--  Core  -->
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/index.global.min.js"></script>
-
-<!--  ICAL.js (bundle browser)  -->
-<script src="https://cdn.jsdelivr.net/npm/ical.js@1.4.0/build/ical.js"></script>
-
-<!--  Plugins  -->
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.11/index.global.min.js"></script>
+<!-- core + vistas -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+<!-- plugin ics -->
 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.11/index.global.min.js"></script>
 
+<!-- estilo rápido -->
 <style>
   body{margin:0;padding:1rem;display:flex;gap:2rem;align-items:flex-start;font-family:sans-serif}
   #foto{width:45%;max-width:480px;border-radius:8px}
-  #cal{flex:1;min-width:300px}
+  #cal{flex:1;min-width:320px}
   @media(max-width:900px){body{flex-direction:column}#foto{width:100%}}
 </style>
 </head><body>
 
-<img id="foto"
-     src="https://raw.githubusercontent.com/fersantimo/salas-mty-page/main/salasMTY-Vertical.png"
-     alt="Foto sala">
+<img id="foto" src="https://raw.githubusercontent.com/fersantimo/salas-mty-page/main/salasMTY-Vertical.png" alt="Foto sala">
 
 <div>
   <h2>Sala – Aprendedor al centro</h2>
-  <p>Campus MTY&nbsp;· Centrales Norte piso 2<br>16&nbsp;personas · Proyector, cámara, audio</p>
+  <p>Campus MTY · Centrales Norte piso 2<br>16 personas · Proyector, cámara, audio</p>
   <div id="cal">Cargando agenda…</div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
 
-  /* ics vía allorigins */
-  const ICS   = "https://outlook.office365.com/owa/calendar/171f51fb1da64999af83fed6a931c693@tecmx.onmicrosoft.com/4ff84c083ffd48fda5ad8e53d8e6d89414485631548000335326/calendar.ics";
-  const FEED  = "https://api.allorigins.win/raw?url=" + encodeURIComponent(ICS);
+  const ics = "https://outlook.office365.com/owa/calendar/171f51fb1da64999af83fed6a931c693@tecmx.onmicrosoft.com/4ff84c083ffd48fda5ad8e53d8e6d89414485631548000335326/calendar.ics";
+  const feed = "https://api.allorigins.win/raw?url=" + encodeURIComponent(ics);
 
-  const cal = new FullCalendar.Calendar(document.getElementById('cal'), {
-    plugins: [ FullCalendarTimeGrid, FullCalendarIcalendar ],
-    locale:  'es-mx',
-    initialView: 'timeGridDay',
-    nowIndicator: true,
-    height: 'auto',
-    headerToolbar:{
-      left:'prev,next today',
-      center:'title',
-      right:'timeGridDay,timeGridWeek,listDay'
-    },
-    buttonText:{today:'Hoy',day:'Día',week:'Semana',list:'Lista'},
-    events:{ url: FEED, format:'ics' },
-    eventColor:'#0078d4',
-    slotMinTime:'07:00', slotMaxTime:'22:00'
+  const cal = new FullCalendar.Calendar(document.getElementById("cal"),{
+    plugins:[ FullCalendarTimeGrid , FullCalendarIcalendar ],
+    locale:"es-mx",
+    initialView:"timeGridDay",
+    height:"auto",
+    nowIndicator:true,
+    headerToolbar:{ left:"prev,next today", center:"title", right:"timeGridDay,timeGridWeek,listDay" },
+    buttonText:{ today:"Hoy", day:"Día", week:"Semana", list:"Lista" },
+    events:{ url:feed , format:"ics" },
+    eventColor:"#0078d4",
+    slotMinTime:"07:00", slotMaxTime:"22:00"
   });
 
   cal.render();
