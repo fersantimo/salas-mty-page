@@ -5,33 +5,50 @@
   <title>Sala – Aprendedor al centro</title>
   <style>
     :root { --azulTec:#0078d4 }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:sans-serif;display:flex;flex-wrap:wrap}
-    #foto{width:40%;min-width:260px;max-width:450px}
-    #info{padding:1rem}
-    h2{margin:0 0 .5rem}
-    iframe{flex:1 1 500px;border:0;height:80vh;min-width:500px}
-    @media(max-width:900px){#foto{width:100%;max-width:none}}
+    * { box-sizing: border-box }
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+    }
+    #foto {
+      width: 100%;
+      max-width: 480px;
+      border-radius: 8px;
+    }
+    #info {
+      text-align: center;
+    }
+    iframe {
+      width: 100%;
+      max-width: 900px;
+      height: 700px;
+      border: none;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Tarjeta / póster -->
+  <!-- Imagen del poster -->
   <img id="foto"
        src="https://raw.githubusercontent.com/fersantimo/salas-mty-page/main/salasMTY-Vertical.png"
        alt="Sala de juntas">
 
-  <!-- Detalles rápidos -->
+  <!-- Info descriptiva -->
   <div id="info">
-      <h2>Sala – Aprendedor al centro</h2>
-      Campus MTY · Centrales Norte piso 2<br>
-      16 personas · Proyector, cámara, audio
+    <h2>Sala – Aprendedor al centro</h2>
+    Campus MTY · Centrales Norte piso 2<br>
+    16 personas · Proyector, cámara, audio
   </div>
 
-  <!-- Visor público de Google Calendar -->
+  <!-- Calendario embebido con vista Agenda -->
   <iframe
-     src="https://calendar.google.com/calendar/embed?src=2318gaej1kq4i7ljh5jjb3jpe35i7fi3%40import.calendar.google.com&ctz=America/Mexico_City"
-     loading="lazy">
+    src="https://calendar.google.com/calendar/embed?src=2318gaej1kq4i7ljh5jjb3jpe35i7fi3%40import.calendar.google.com&ctz=America%2FMexico_City&mode=AGENDA"
+    loading="lazy">
   </iframe>
 
 </body>
