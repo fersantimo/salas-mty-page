@@ -60,9 +60,7 @@ document.querySelector('#hero img').src = sala.foto;
 const cal = new FullCalendar.Calendar(
   document.getElementById('cal'),
   {
-    /*  👇  los objetos plugin, no strings  */
-    plugins: [ FullCalendar.timeGridPlugin, FullCalendar.icalendarPlugin ],
-
+    plugins: [ timeGridPlugin, icalendarPlugin ],   // ← solo los nombres globales
     locale: 'es-mx',
     initialView: 'timeGridDay',
     slotMinTime: '07:00',
@@ -70,7 +68,6 @@ const cal = new FullCalendar.Calendar(
     nowIndicator: true,
     headerToolbar: { left:'prev,next today', center:'title', right:'' },
     height: '100%',
-
     eventSources: [
       { url: sala.ics, format: 'ics' }
     ]
