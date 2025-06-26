@@ -11,7 +11,7 @@
   <!-- ICAL.js -->
   <script src="https://cdn.jsdelivr.net/npm/ical.js@1.4.0/build/ical.min.js"></script>
 
-  <!-- Plugin icalendar -->
+  <!-- Plugin icalendar de FullCalendar -->
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.17/index.global.min.js"></script>
 
   <style>
@@ -21,11 +21,13 @@
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%;display:flex;font-family:var(--font)}
-    #hero{width:36%;min-width:300px;background:var(--rosa);display:flex;flex-direction:column;color:#fff}
+    #hero{width:36%;min-width:300px;background:var(--rosa);
+          display:flex;flex-direction:column;color:#fff}
     #hero h1{font-size:2.6rem;font-weight:700;padding:1.4rem}
     #hero img{flex:1;object-fit:cover;width:100%}
     #wrap{flex:1;display:flex;flex-direction:column;padding:0 .8rem}
     #cal{flex:1;height:100%}
+
     /* FullCalendar tweaks */
     .fc-theme-standard .fc-scrollgrid{border-color:var(--linea)}
     .fc .fc-toolbar-title{font-size:1.3rem;font-weight:600}
@@ -44,43 +46,36 @@
   <section id="wrap"><div id="cal"></div></section>
 
 <script>
-/* -------- Config propio de la sala -------- */
+/* ---------- Config propio de la sala ---------- */
 const sala = {
   nombre : 'Empatía',
   ics    : 'Empatia_clean.ics',
   foto   : 'salasMTY-Vertical.png'
 };
-/* ------------------------------------------ */
+/* ---------------------------------------------- */
 
 roomName.textContent = sala.nombre;
 document.querySelector('#hero img').src = sala.foto;
 
-/* Plugins globales que expone el bundle */
 const { timeGridPlugin, icalendarPlugin } = FullCalendar;
 
-/* Instanciamos el calendario */
-const cal = new FullCalendar.Calendar(
-  document.getElementById('cal'),
-  {
-    plugins: [timeGridPlugin, icalendarPlugin],
-    locale: 'es-mx',
-    initialView: 'timeGridDay',
-    slotMinTime: '07:00',
-    slotMaxTime: '21:00',
-    nowIndicator: true,
-    headerToolbar: { left: 'prev,next today', center: 'title', right: '' },
-    height: '100%',
-    eventSources: [
-      { url: sala.ics, format: 'ics' }
-    ]
-  }
-);
-
-/* Render! */
+const cal = new FullCalendar.Calendar(document.getElementById('cal'), {
+  plugins: [ timeGridPlugin, icalendarPlugin ],
+  locale: 'es-mx',
+  initialView: 'timeGridDay',
+  slotMinTime: '07:00',
+  slotMaxTime: '21:00',
+  nowIndicator: true,
+  headerToolbar: { left:'prev,next today', center:'title', right:'' },
+  height: '100%',
+  eventSources: [
+    { url: sala.ics, format: 'ics' }
+  ]
+});
 cal.render();
 
 /* refresco cada 5 min */
-setInterval(() => cal.refetchEvents(), 300_000);
+setInterval(() => cal.refetchEvents(), 5 * 60 * 1000);
 </script>
 </body>
 </html>
