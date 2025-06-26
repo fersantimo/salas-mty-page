@@ -4,15 +4,20 @@
   <meta charset="utf-8"/>
   <title>Sala – Empatía</title>
 
-  <!-- FullCalendar bundle + CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/main.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/main.min.js"></script>
+  <!-- CSS núcleo + CSS de timeGrid -->
+  <link rel="stylesheet"
+        href="https://unpkg.com/@fullcalendar/core@6.1.8/main.min.css">
+  <link rel="stylesheet"
+        href="https://unpkg.com/@fullcalendar/timegrid@6.1.8/main.min.css">
 
-  <!-- ICAL.js (define ICAL global) -->
+  <!-- Núcleo FullCalendar (global build) -->
+  <script src="https://unpkg.com/@fullcalendar/core@6.1.8/index.global.min.js"></script>
+  <!-- Plugin timeGrid -->
+  <script src="https://unpkg.com/@fullcalendar/timegrid@6.1.8/index.global.min.js"></script>
+  <!-- ICAL.js (variable global ICAL) -->
   <script src="https://cdn.jsdelivr.net/npm/ical.js@1.4.0/build/ical.min.js"></script>
-
-  <!-- Plugin icalendar de FullCalendar -->
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.7/index.global.min.js"></script>
+  <!-- Plugin icalendar -->
+  <script src="https://unpkg.com/@fullcalendar/icalendar@6.1.8/index.global.min.js"></script>
 
   <style>
     :root{
@@ -40,41 +45,39 @@
 <body>
   <aside id="hero">
     <h1 id="roomName">Empatía</h1>
-    <img src="salasMTY-Vertical.png" alt="Sala Empatía">
+    <img id="roomImg" src="salasMTY-Vertical.png" alt="Sala Empatía">
   </aside>
 
   <section id="wrap"><div id="cal"></div></section>
 
 <script>
+  /* ----------- Config de esta sala ----------- */
   const sala = {
-    nombre: "Empatía",
-    ics: "Empatia_clean.ics",
-    foto: "salasMTY-Vertical.png"
+    nombre : 'Empatía',
+    ics    : 'Empatia_clean.ics',
+    foto   : 'salasMTY-Vertical.png'
   };
+  /* ------------------------------------------- */
 
-  document.querySelector("#hero h1").textContent = sala.nombre;
-  document.querySelector("#hero img").src = sala.foto;
+  document.getElementById('roomName').textContent = sala.nombre;
+  document.getElementById('roomImg').src = sala.foto;
 
-  const cal = new FullCalendar.Calendar(document.getElementById("cal"), {
-    plugins: [ FullCalendar.icalendarPlugin ],
-    initialView: "timeGridDay",
-    locale: "es-mx",
-    slotMinTime: "07:00",
-    slotMaxTime: "21:00",
+  const cal = new FullCalendar.Calendar(document.getElementById('cal'), {
+    plugins: [ FullCalendar.TimeGridPlugin, FullCalendar.IcalendarPlugin ],
+    initialView: 'timeGridDay',
+    locale: 'es-mx',
+    slotMinTime: '07:00',
+    slotMaxTime: '21:00',
     nowIndicator: true,
-    headerToolbar: { left:"prev,next today", center:"title", right:"" },
-    height: "100%",
+    headerToolbar: { left:'prev,next today', center:'title', right:'' },
+    height: '100%',
     eventSources: [
-      {
-        url: sala.ics,
-        format: "ics"
-      }
+      { url: sala.ics, format: 'ics' }
     ]
   });
 
   cal.render();
-
-  setInterval(() => cal.refetchEvents(), 300000);
+  setInterval(() => cal.refetchEvents(), 5 * 60 * 1000);
 </script>
 </body>
 </html>
