@@ -1,76 +1,78 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"/>
-  <title>Sala – Empatía</title>
+<meta charset="utf-8" />
+<title>Sala – Empatía</title>
 
-  <!-- FullCalendar estilos (incluye Core + TimeGrid) -->
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/main.min.css" rel="stylesheet">
+<!--  FullCalendar núcleo + CSS  -->
+<link  href="https://unpkg.com/@fullcalendar/core@6.1.17/main.min.css"   rel="stylesheet">
+<script src="https://unpkg.com/@fullcalendar/core@6.1.17/main.global.min.js"></script>
 
-  <!-- Core y plugins en versión *global* -->
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.17/index.global.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.17/index.global.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.17/index.global.min.js"></script>
+<!--  TimeGrid (vista agenda)  -->
+<link  href="https://unpkg.com/@fullcalendar/timegrid@6.1.17/main.min.css" rel="stylesheet">
+<script src="https://unpkg.com/@fullcalendar/timegrid@6.1.17/main.global.min.js"></script>
 
-  <!-- Dependencia de plugin iCalendar -->
-  <script src="https://cdn.jsdelivr.net/npm/ical.js@1.4.0/build/ical.min.js"></script>
+<!--  ICAL.js y plugin iCalendar  -->
+<script src="https://unpkg.com/ical.js@1.4.0/build/ical.min.js"></script>
+<script src="https://unpkg.com/@fullcalendar/icalendar@6.1.17/main.global.min.js"></script>
 
-  <style>
-    :root{
-      --rosa:#f33d70; --gris:#9ea0a3; --linea:#dcdcdc;
-      --font:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;display:flex;font-family:var(--font)}
-    #hero{width:36%;min-width:300px;background:var(--rosa);display:flex;flex-direction:column;color:#fff}
-    #hero h1{font-size:2.6rem;font-weight:700;padding:1.4rem}
-    #hero img{flex:1;object-fit:cover;width:100%}
-    #wrap{flex:1;display:flex;flex-direction:column;padding:0 .8rem}
-    #cal{flex:1;height:100%}
-
-    /* FullCalendar tweaks */
-    .fc-theme-standard .fc-scrollgrid{border-color:var(--linea)}
-    .fc .fc-toolbar-title{font-size:1.3rem;font-weight:600}
-    .fc-button{background:#fff;border:2px solid #000;color:#000;border-radius:8px;padding:.2rem .8rem}
-    .fc-button-primary:not(:disabled):hover{background:#000;color:#fff}
-    .fc-event{background:var(--gris);border:0;border-radius:4px;font-size:.85rem}
-  </style>
+<style>
+:root{
+  --rosa:#f33d70;--gris:#9ea0a3;--linea:#dcdcdc;
+  --font:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;display:flex;font-family:var(--font)}
+#hero{width:36%;min-width:300px;background:var(--rosa);display:flex;flex-direction:column;color:#fff}
+#hero h1{font-size:2.6rem;font-weight:700;padding:1.4rem}
+#hero img{flex:1;object-fit:cover;width:100%}
+#wrap{flex:1;display:flex;flex-direction:column;padding:0 .8rem}
+#cal{flex:1;height:100%}
+/* pequeños retoques FC */
+.fc-theme-standard .fc-scrollgrid{border-color:var(--linea)}
+.fc .fc-toolbar-title{font-size:1.3rem;font-weight:600}
+.fc-button{background:#fff;border:2px solid #000;color:#000;border-radius:8px;padding:.2rem .8rem}
+.fc-button-primary:not(:disabled):hover{background:#000;color:#fff}
+.fc-event{background:var(--gris);border:0;border-radius:4px;font-size:.85rem}
+</style>
 </head>
 
 <body>
   <aside id="hero">
     <h1 id="roomName">Empatía</h1>
-    <img id="roomImg" src="salasMTY-Vertical.png" alt="Sala Empatía">
+    <img id="roomImg" src="salasMTY-Vertical.png" alt="Sala Empatía">
   </aside>
 
   <section id="wrap"><div id="cal"></div></section>
 
 <script>
-  /* --- Config de la sala --- */
-  const sala = {
-    ics  : "Empatia_clean.ics",
-    foto : "salasMTY-Vertical.png"
-  };
-  /* ------------------------- */
+/* ------------  config de la sala ------------------ */
+const sala = {
+  ics  : 'Empatia_clean.ics',      // tu feed ICS ya depurado
+  foto : 'salasMTY-Vertical.png'
+};
+/* -------------------------------------------------- */
 
-  // Asegúrate de que la imagen se actualice si cambias de sala
-  document.getElementById("roomImg").src = sala.foto;
+document.getElementById('roomImg').src = sala.foto;
 
-  const cal = new FullCalendar.Calendar(document.getElementById("cal"), {
-    plugins: [ FullCalendar.TimeGrid, FullCalendar.ICalendar ],
-    locale: "es-mx",
-    initialView: "timeGridDay",
-    slotMinTime: "07:00",
-    slotMaxTime: "21:00",
-    nowIndicator: true,
-    headerToolbar: { left: "prev,next today", center: "title", right: "" },
-    height: "100%",
-    eventSources: [{ url: sala.ics, format: "ics" }]
-  });
+const { Calendar } = FullCalendar;
 
-  cal.render();
-  // refresco cada 5 min
-  setInterval(() => cal.refetchEvents(), 5 * 60 * 1000);
+const cal = new Calendar(document.getElementById('cal'), {
+  plugins: [ 'timeGrid', 'icalendar' ],      // ← nombres, no objetos
+  locale: 'es-mx',
+  initialView: 'timeGridDay',
+  slotMinTime: '07:00',
+  slotMaxTime: '21:00',
+  nowIndicator: true,
+  headerToolbar: { left:'prev,next today', center:'title', right:'' },
+  height: '100%',
+  eventSources: [
+    { url: sala.ics, format: 'ics' }
+  ]
+});
+
+cal.render();
+setInterval(() => cal.refetchEvents(), 5*60*1000);   // refresco cada 5 min
 </script>
 </body>
 </html>
