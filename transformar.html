@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<title>Sala</title>
+<link  href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.17/index.global.min.js"></script>
+<style>
+  :root{--rosa:#f33d70;--gris:#9ea0a3;--linea:#dcdcdc;
+        --font:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;display:flex;font-family:var(--font)}
+  #hero{width:36%;min-width:300px;background:var(--rosa);display:flex;flex-direction:column;color:#fff}
+  #hero h1{font-size:2.6rem;font-weight:700;padding:1.4rem}
+  #hero img{flex:1;object-fit:cover;width:100%}
+  #wrap{flex:1;display:flex;flex-direction:column;padding:0 .8rem}
+  #cal{flex:1;height:100%}
+  /* FullCalendar tweaks */
+  .fc-theme-standard .fc-scrollgrid{border-color:var(--linea)}
+  .fc .fc-toolbar-title{font-size:1.3rem;font-weight:600}
+  .fc-button{background:#fff;border:2px solid #000;color:#000;border-radius:8px;padding:.2rem .8rem}
+  .fc-button-primary:not(:disabled):hover{background:#000;color:#fff}
+  .fc-event{background:var(--gris);border:0;border-radius:4px;font-size:.85rem}
+</style>
+</head>
+<body>
+  <aside id="hero">
+    <h1 id="roomName"></h1>
+    <img src="img/sala.jpg" alt="Sala">
+  </aside>
+
+  <section id="wrap"><div id="cal"></div></section>
+
+<script>
+/* ----------  CONFIGURACIÓN PROPIA DE CADA SALA  ---------- */
+/*  COPIA este bloque tal cual al crear cada archivo final   */
+const sala = {
+  nombre : 'Transformar',
+  ics    : 'https://outlook.office365.com/owa/calendar/c3b8888cfa2d4892b2299cde3ab930c7@itesm.mx/15c116d535094c3d8c1327d574116dbb4571580564513920580/calendar.ics',
+  foto   : 'salasMTY-Vertical.png'   // o img/inclusion.jpg si la subes ahí
+};
+/* --------------------------------------------------------- */
+
+roomName.textContent = sala.nombre;
+document.querySelector('#hero img').src = sala.foto;
+
+const cal = new FullCalendar.Calendar(document.getElementById('cal'),{
+  plugins:['timeGrid','icalendar'],
+  locale:'es-mx',
+  initialView:'timeGridDay',
+  slotMinTime:'07:00',
+  slotMaxTime:'21:00',
+  nowIndicator:true,
+  headerToolbar:{left:'prev,next today',center:'title',right:''},
+  height:'100%',
+  eventSources:[{url:sala.ics, format:'ics'}]
+});
+cal.render();
+
+/* refresco cada 5 min */
+setInterval(()=>cal.refetchEvents(),300000);
+</script>
+</body>
+</html>
