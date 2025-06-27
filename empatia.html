@@ -4,18 +4,11 @@
   <meta charset="utf-8" />
   <title>Empatía</title>
 
-<!-- CSS correcto -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.css" rel="stylesheet">
+  <!-- FullCalendar CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/main.min.css" rel="stylesheet" />
 
-<!-- FullCalendar core -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
-
-<!-- ICAL.js desde UNPKG -->
-<script src="https://unpkg.com/ical.js@1.4.0/build/ical.min.js"></script>
-
-<!-- Plugin iCalendar -->
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.17/index.global.min.js"></script>
-
+  <!-- FullCalendar JS -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/main.min.js"></script>
 
   <style>
     :root {
@@ -70,7 +63,6 @@
       height: 100%;
     }
 
-    /* Estilo para el calendario */
     .fc-theme-standard .fc-scrollgrid {
       border-color: var(--linea);
     }
@@ -114,7 +106,7 @@
   <script>
     const sala = {
       nombre: 'Empatía',
-      ics: 'https://ics-backend-tec-d3fec3ewdfevcgd5.eastus-01.azurewebsites.net/ics/empatia',
+      url: 'https://ics-backend-tec-d3fec3ewdfevcgd5.eastus-01.azurewebsites.net/ics/empatia',
       foto: 'salasMTY-Vertical.png'
     };
 
@@ -122,21 +114,19 @@
     document.querySelector('#hero img').src = sala.foto;
 
     const cal = new FullCalendar.Calendar(document.getElementById('cal'), {
-      plugins: ['timeGrid', 'icalendar'],
-      locale: 'es-mx',
       initialView: 'timeGridDay',
+      locale: 'es-mx',
       slotMinTime: '07:00',
       slotMaxTime: '21:00',
       nowIndicator: true,
       headerToolbar: { left: 'prev,next today', center: 'title', right: '' },
       height: '100%',
-      eventSources: [{ url: sala.ics}]
+      events: sala.url // <--- Esto es lo que cambia: espera JSON ya
     });
 
     cal.render();
 
-    // Refresca cada 5 minutos
-    setInterval(() => cal.refetchEvents(), 300000);
+    setInterval(() => cal.refetchEvents(), 300000); // cada 5 minutos
   </script>
 </body>
 </html>
