@@ -5,14 +5,13 @@
   <title>Empatía</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Estilos de FullCalendar -->
-  <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/index.global.min.css" rel="stylesheet" />
+  <!-- FullCalendar styles desde CDN válidos -->
+  <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/main.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/main.min.css" rel="stylesheet" />
 
-  <!-- Scripts -->
+  <!-- FullCalendar scripts globales -->
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/index.global.min.js"></script>
-
 
   <style>
     * { box-sizing: border-box; }
@@ -46,24 +45,29 @@
     document.addEventListener('DOMContentLoaded', async function () {
       const calendarEl = document.getElementById('calendar');
 
-      const response = await fetch("https://ics-backend-tec-d3fec3ewdfevcgd5.eastus-01.azurewebsites.net/ics/empatia");
-      const events = await response.json();
+      try {
+        const response = await fetch("https://ics-backend-tec-d3fec3ewdfevcgd5.eastus-01.azurewebsites.net/ics/empatia");
+        const events = await response.json();
 
-      const calendar = new FullCalendar.Calendar(calendarEl, {
-        plugins: [FullCalendar.TimeGridPlugin],
-        initialView: 'timeGridWeek',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'timeGridDay,timeGridWeek,listWeek'
-        },
-        locale: 'es',
-        slotMinTime: '07:00:00',
-        slotMaxTime: '21:00:00',
-        events: events
-      });
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+          plugins: [FullCalendar.TimeGrid],
+          initialView: 'timeGridWeek',
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'timeGridDay,timeGridWeek,listWeek'
+          },
+          locale: 'es',
+          slotMinTime: '07:00:00',
+          slotMaxTime: '21:00:00',
+          events: events
+        });
 
-      calendar.render();
+        calendar.render();
+      } catch (error) {
+        console.error("Error cargando eventos:", error);
+        calendarEl.innerHTML = "<p style='color:red'>No se pudo cargar la agenda</p>";
+      }
     });
   </script>
 </body>
