@@ -114,7 +114,7 @@
   <script>
     const sala = {
       nombre: 'Empatía',
-      ics: 'https://ics-backend-tec-d3fec3ewdfevcgd5.eastus-01.azurewebsites.net/empatia',
+      ics: 'https://ics-backend-tec-d3fec3ewdfevcgd5.eastus-01.azurewebsites.net/ics/empatia',
       foto: 'salasMTY-Vertical.png'
     };
 
@@ -130,7 +130,7 @@
       nowIndicator: true,
       headerToolbar: { left: 'prev,next today', center: 'title', right: '' },
       height: '100%',
-      eventSources: [{ url: sala.ics, format: 'ics' }]
+      eventSources: [{ url: sala.ics}]
     });
 
     cal.render();
