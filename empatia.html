@@ -1,36 +1,37 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8"/>
   <title>Sala – Empatía</title>
 
-  <!-- Bundle global + css único -->
-  <link  href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+  <!-- ✅ FullCalendar Bundle Global (incluye todo) -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
-  <!-- ICAL.js (requisito del plugin iCalendar) -->
+  <!-- ✅ ICAL.js -->
   <script src="https://cdn.jsdelivr.net/npm/ical.js@1.4.0/build/ical.min.js"></script>
 
-  <!-- Plugin iCalendar en formato global -->
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.17/index.global.min.js"></script>
+  <!-- ✅ Plugin iCalendar -->
+  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.11/index.global.min.js"></script>
 
   <style>
-    :root{ --rosa:#f33d70; --gris:#9ea0a3; --linea:#dcdcdc;
-           --font:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif }
+    :root{
+      --rosa:#f33d70; --gris:#9ea0a3; --linea:#dcdcdc;
+      --font:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    }
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%;display:flex;font-family:var(--font)}
-    #hero{width:36%;min-width:300px;background:var(--rosa);color:#fff;
-          display:flex;flex-direction:column}
+    #hero{width:36%;min-width:300px;background:var(--rosa);
+          display:flex;flex-direction:column;color:#fff}
     #hero h1{font-size:2.6rem;font-weight:700;padding:1.4rem}
     #hero img{flex:1;object-fit:cover;width:100%}
     #wrap{flex:1;display:flex;flex-direction:column;padding:0 .8rem}
     #cal{flex:1;height:100%}
 
-    /* FC tweaks */
+    /* FullCalendar tweaks */
     .fc-theme-standard .fc-scrollgrid{border-color:var(--linea)}
     .fc .fc-toolbar-title{font-size:1.3rem;font-weight:600}
-    .fc-button{background:#fff;border:2px solid #000;color:#000;
-               border-radius:8px;padding:.2rem .8rem}
+    .fc-button{background:#fff;border:2px solid #000;color:#000;border-radius:8px;padding:.2rem .8rem}
     .fc-button-primary:not(:disabled):hover{background:#000;color:#fff}
     .fc-event{background:var(--gris);border:0;border-radius:4px;font-size:.85rem}
   </style>
@@ -44,36 +45,40 @@
 
   <section id="wrap"><div id="cal"></div></section>
 
-  <script>
-    /* config de la sala */
-    const sala = {
-      nombre : 'Empatía',
-      ics    : 'Empatia_clean.ics',
-      foto   : 'salasMTY-Vertical.png'
-    };
+<script>
+/* ----- Config de la sala ----- */
+const sala = {
+  nombre : 'Empatía',
+  ics    : 'Empatia_clean.ics',
+  foto   : 'salasMTY-Vertical.png'
+};
+/* ----------------------------- */
 
-    /* pinta título y foto */
-    roomName.textContent = sala.nombre;
-    roomImg.src = sala.foto;
+roomName.textContent = sala.nombre;
+document.getElementById('roomImg').src = sala.foto;
 
-    /* instancia FC */
-    const calendar = new FullCalendar.Calendar(document.getElementById('cal'), {
-      plugins: [ FullCalendar.timeGridPlugin, FullCalendar.icalendarPlugin ],
-      locale: 'es-mx',
-      initialView: 'timeGridDay',
-      slotMinTime: '07:00',
-      slotMaxTime: '21:00',
-      nowIndicator: true,
-      headerToolbar: { left:'prev,next today', center:'title', right:'' },
-      height: '100%',
-      eventSources: [
-        { url: sala.ics, format: 'ics' }
-      ]
-    });
+const { Calendar } = FullCalendar;
+const calendarEl = document.getElementById('cal');
 
-    calendar.render();
-    /* refresco cada 5 min */
-    setInterval(() => calendar.refetchEvents(), 5*60*1000);
-  </script>
+const cal = new Calendar(calendarEl, {
+  plugins: [ FullCalendar.icalendarPlugin ],
+  locale: 'es-mx',
+  initialView: 'timeGridDay',
+  slotMinTime: '07:00',
+  slotMaxTime: '21:00',
+  nowIndicator: true,
+  headerToolbar: { left:'prev,next today', center:'title', right:'' },
+  height: '100%',
+  eventSources: [
+    { url: sala.ics, format: 'ics' }
+  ]
+});
+
+cal.render();
+
+/* refresco cada 5 min */
+setInterval(() => cal.refetchEvents(), 5 * 60 * 1000);
+</script>
+
 </body>
 </html>
