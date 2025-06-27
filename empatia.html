@@ -1,146 +1,63 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Empatía</title>
-
-  <!-- FullCalendar CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.css" rel="stylesheet">
-
-  <!-- FullCalendar Core -->
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
-
-  <!-- ICAL.js -->
-  <script src="https://unpkg.com/ical.js@1.4.0/build/ical.min.js"></script>
-
-  <!-- FullCalendar iCalendar plugin -->
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.17/index.global.min.js"></script>
-
+  <title>Agenda – Sala Empatía</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    :root {
-      --rosa: #f33d70;
-      --gris: #9ea0a3;
-      --linea: #dcdcdc;
-      --font: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
+    html, body {
       margin: 0;
       padding: 0;
-    }
-
-    html, body {
       height: 100%;
-      display: flex;
-      font-family: var(--font);
+      font-family: sans-serif;
+      background: #f9f9f9;
     }
-
-    #hero {
-      width: 36%;
-      min-width: 300px;
-      background: var(--rosa);
-      display: flex;
-      flex-direction: column;
-      color: #fff;
-    }
-
-    #hero h1 {
-      font-size: 2.6rem;
-      font-weight: 700;
-      padding: 1.4rem;
-    }
-
-    #hero img {
-      flex: 1;
-      object-fit: cover;
-      width: 100%;
-    }
-
-    #wrap {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 0 .8rem;
-    }
-
     #cal {
-      flex: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1rem;
+      background: white;
       height: 100%;
-    }
-
-    /* Calendario */
-    .fc-theme-standard .fc-scrollgrid {
-      border-color: var(--linea);
-    }
-
-    .fc .fc-toolbar-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-    }
-
-    .fc-button {
-      background: #fff;
-      border: 2px solid #000;
-      color: #000;
-      border-radius: 8px;
-      padding: .2rem .8rem;
-    }
-
-    .fc-button-primary:not(:disabled):hover {
-      background: #000;
-      color: #fff;
-    }
-
-    .fc-event {
-      background: var(--gris);
-      border: 0;
-      border-radius: 4px;
-      font-size: .85rem;
     }
   </style>
+
+  <!-- FullCalendar CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/main.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/timegrid.min.css" rel="stylesheet" />
 </head>
 <body>
-  <aside id="hero">
-    <h1 id="roomName"></h1>
-    <img src="salasMTY-Vertical.png" alt="Sala Empatía">
-  </aside>
 
-  <section id="wrap">
-    <div id="cal"></div>
-  </section>
+  <div id="cal"></div>
+
+  <!-- FullCalendar JS -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/timegrid.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ical.js@1.4.0/build/ical.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.17/index.global.min.js"></script>
 
   <script>
-    const sala = {
-      nombre: 'Empatía',
-      ics: 'https://ics-backend-tec-d3fec3ewdfevcgd5.eastus-01.azurewebsites.net/ics/empatia',
-      foto: 'salasMTY-Vertical.png'
-    };
-
-    document.getElementById('roomName').textContent = sala.nombre;
-    document.querySelector('#hero img').src = sala.foto;
-
-    const calendar = new FullCalendar.Calendar(document.getElementById('cal'), {
+    const cal = new FullCalendar.Calendar(document.getElementById('cal'), {
       plugins: [FullCalendarPluginTimeGrid, FullCalendarPluginICalendar],
       initialView: 'timeGridDay',
       locale: 'es-mx',
-      slotMinTime: '07:00:00',
-      slotMaxTime: '21:00:00',
+      slotMinTime: '07:00',
+      slotMaxTime: '21:00',
       nowIndicator: true,
+      height: '100%',
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
         right: ''
       },
-      eventSources: [{
-        url: sala.ics,
-        format: 'json'
-      }],
-      height: '100%'
+      eventSources: [
+        {
+          url: 'https://ics-backend-tec-d3fec3ewdfevcgd5.eastus-01.azurewebsites.net/ics/empatia',
+          format: 'json'
+        }
+      ]
     });
 
-    calendar.render();
-    setInterval(() => calendar.refetchEvents(), 300000); // Refresca cada 5 min
+    cal.render();
   </script>
 </body>
 </html>
