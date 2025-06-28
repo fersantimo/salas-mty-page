@@ -5,11 +5,10 @@
   <title>Empatía</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- FullCalendar styles desde CDN válidos -->
+  <!-- FullCalendar desde CDN -->
   <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/main.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/main.min.css" rel="stylesheet" />
 
-  <!-- FullCalendar scripts globales -->
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/index.global.min.js"></script>
 
@@ -50,7 +49,7 @@
         const events = await response.json();
 
         const calendar = new FullCalendar.Calendar(calendarEl, {
-          plugins: [FullCalendar.TimeGrid],
+          plugins: [FullCalendar.TimeGridPlugin],
           initialView: 'timeGridWeek',
           headerToolbar: {
             left: 'prev,next today',
